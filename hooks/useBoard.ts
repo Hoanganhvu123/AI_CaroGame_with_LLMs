@@ -42,7 +42,7 @@ export const useBoard = (boardSize: number) => {
   const handleCellClick = async (row: number, col: number) => {
     if (!isPlayerTurn || gameState.board[row][col] || winner) return;
   
-    // Người chơi đánh
+    // Player's move
     const newBoard = gameState.board.map(r => [...r]);
     newBoard[row][col] = 'X';
   
@@ -69,7 +69,7 @@ export const useBoard = (boardSize: number) => {
       if (response && response.text) {
         const aiResponse = JSON.parse(response.text).content;
   
-        // Cập nhật chat history với thông tin từ AI
+        // Update chat history with AI information
         setChatHistory(prev => [...prev, {
           role: 'assistant',
           content: `${aiResponse.message}\n\nTrash Talk: ${aiResponse.trashTalk}\n\nExplanation: ${aiResponse.explanation}\n\nSuggestion: ${aiResponse.suggestion}`
@@ -105,7 +105,7 @@ export const useBoard = (boardSize: number) => {
       setCurrentTurn('User');
       setChatHistory(prev => [...prev, {
         role: 'assistant',
-        content: 'Xin lỗi, đã xảy ra lỗi khi xử lý nước đi của AI. Vui lòng thử lại.'
+        content: 'Sorry, an error occurred while processing the AI move. Please try again.'
       }]);
     }
   };

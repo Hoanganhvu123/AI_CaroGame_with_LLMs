@@ -1,4 +1,4 @@
-import './globals.css'
+import '../styles/globals.css'  // Cập nhật đường dẫn này
 
 export default function RootLayout({
   children,

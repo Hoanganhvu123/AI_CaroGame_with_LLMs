@@ -1,15 +1,15 @@
 'use client';
 
 import React from 'react';
-import ChatBot from './components/ChatBot';
-import Board from './components/Board';
+import ChatBot from '@/components/ChatBot';
+import Board from '@/components/Board'; 
 
 export default function Home() {
   return (
     <div className="flex h-screen bg-yellow-100">
       <div className="flex-1 flex overflow-hidden">
         {/* Phần ChatBot */}
-        <div className="w-1/3 flex flex-col bg-white border-r border-gray-200">
+        <div className="w-1/4 flex flex-col bg-white border-r border-gray-200">
           <div className="p-4 border-b border-gray-200">
             <h2 className="text-xl font-semibold text-black">Chat with AI</h2>
           </div>
@@ -17,7 +17,7 @@ export default function Home() {
         </div>
 
         {/* Phần Board Game XO */}
-        <div className="w-2/3 flex flex-col bg-white">
+        <div className="w-3/4 flex flex-col bg-white">
           <div className="p-4">
             <h2 className="text-xl font-semibold">Caro Game</h2>
           </div>

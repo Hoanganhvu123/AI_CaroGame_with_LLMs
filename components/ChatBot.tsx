@@ -30,7 +30,7 @@ const ChatBot: React.FC = () => {
       try {
         content = JSON.parse(message.content);
       } catch (error) {
-        // Nếu không phải JSON, giữ nguyên nội dung
+        // If not JSON, keep the content as is
         console.log("Not a JSON message:", message.content);
       }
     }
@@ -46,7 +46,7 @@ const ChatBot: React.FC = () => {
             )}
           </div>
           <p className="font-semibold text-black">
-            {isBot ? 'GokuMoku' : 'Người chơi'}
+            {isBot ? 'GokuMoku' : 'Player'}
           </p>
         </div>
         {isBot && typeof content === 'object' ? (
@@ -90,7 +90,7 @@ const ChatBot: React.FC = () => {
             <div className="w-8 h-8 rounded-full border-2 border-black flex items-center justify-center mr-2">
               <Bot className="w-5 h-5 text-black" />
             </div>
-            <span className="text-gray-800">GokuMoku đang nhập...</span>
+            <span className="text-gray-800">GokuMoku is typing...</span>
             <Loader className="w-4 h-4 ml-2 text-black animate-spin" />
           </div>
         )}
@@ -103,12 +103,12 @@ const ChatBot: React.FC = () => {
             value={inputMessage}
             onChange={(e) => setInputMessage(e.target.value)}
             className="flex-1 px-4 py-2 border rounded-lg text-lg text-black focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Nhập tin nhắn..."
+            placeholder="Enter a message..."
           />
           <button
             type="submit"
             className="px-6 py-2 bg-blue-500 text-white rounded-lg text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            aria-label="Gửi tin nhắn"
+            aria-label="Send message"
           >
             <Send className="w-6 h-6" />
           </button>

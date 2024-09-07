@@ -1,8 +1,9 @@
 import { useState, useCallback } from 'react';
-import { ChatGroq } from "@langchain/groq";
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { caroGamePrompt } from './useCaroGamePrompt';
+import { PromptTemplate } from "@langchain/core/prompts";
 
-// Định nghĩa các types
+// Define types
 type GameState = {
   board: string[][];
   movesHistory: { x: number; y: number }[];
@@ -38,33 +39,30 @@ export const useChatbot = () => {
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [isTyping, setIsTyping] = useState(false);
 
-  // Khởi tạo model và promptTemplate
-  const model = new ChatGroq({
-    model: "llama3-70b-8192",
-    apiKey: "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",
-    temperature: 0.1,
+  // Initialize model
+  const model = new ChatGoogleGenerativeAI({
+    modelName: "gemini-1.5-flash",
+    apiKey: 'AIzaSyDupRJujCkJENMw28K84nfTuMyRQdHJZPs',
   });
-
-  const chain = caroGamePrompt.pipe(model);
 
   const sendMessage = useCallback(async (input: SendMessageInput) => {
     setIsTyping(true);
     console.log("User:", input);
 
     try {
-      // Thêm tin nhắn của người dùng vào chat history
+      // Add user message to chat history
       const newChatHistory: ChatMessage[] = [
         ...chatHistory,
         {
           role: "user",
           content: input.type === 'chat'
             ? input.content as string
-            : `Đánh vào vị trí (${(input.content as { x: number; y: number }).x}, ${(input.content as { x: number; y: number }).y})`
+            : `Move to position (${(input.content as { x: number; y: number }).x}, ${(input.content as { x: number; y: number }).y})`
         }
       ];
       setChatHistory(newChatHistory);
 
-      const result = await chain.invoke({
+      const formattedPrompt = await caroGamePrompt.format({
         game_state: JSON.stringify(gameState.board),
         moves_history: JSON.stringify(gameState.movesHistory),
         chat_history: JSON.stringify(newChatHistory),
@@ -72,12 +70,13 @@ export const useChatbot = () => {
         move_input: input.type === 'game_move' ? JSON.stringify(input.content) : ''
       });
 
-      const aiResponse: AIResponse = JSON.parse(result.text);
+      const result = await model.invoke(formattedPrompt);
+      const aiResponse: AIResponse = JSON.parse(result.content as string);
       console.log("AI response:", JSON.stringify(aiResponse, null, 2));
 
       const { message, next_move, explanation, trashTalk, suggestion } = aiResponse.content;
 
-      // Cập nhật game state nếu AI đánh
+      // Update game state if AI makes a move
       if (next_move) {
         setGameState(prevState => {
           const newBoard = prevState.board.map(row => [...row]);
@@ -90,17 +89,17 @@ export const useChatbot = () => {
         console.log(`AI Move: (${next_move.x}, ${next_move.y})`);
       }
 
-      // Log các thông tin bổ sung
+      // Log additional information
       if (explanation) console.log(`Explanation: ${explanation}`);
       if (trashTalk) console.log(`Trash talk: ${trashTalk}`);
       if (suggestion) console.log(`Suggestion: ${suggestion}`);
 
-      // Thêm phản hồi của AI vào chat history
+      // Add AI response to chat history
       setChatHistory(prev => [
         ...prev,
         {
           role: "assistant",
-          content: `${message}${trashTalk ? `\n\nTrash Talk: ${trashTalk}` : ''}${explanation ? `\n\nExplanation: ${explanation}` : ''}${suggestion ? `\n\nSuggestion: ${suggestion}` : ''}${next_move ? `\n\nAI Move: (${next_move.x}, ${next_move.y})` : ''}`
+          content: JSON.stringify(aiResponse.content)
         }
       ]);
 
@@ -109,12 +108,12 @@ export const useChatbot = () => {
       console.error('Error:', error);
       setChatHistory(prev => [
         ...prev,
-        { role: "assistant", content: "Xin lỗi, đã xảy ra lỗi. Vui lòng thử lại." }
+        { role: "assistant", content: JSON.stringify({ message: "Sorry, an error occurred. Please try again." }) }
       ]);
     } finally {
       setIsTyping(false);
     }
-  }, [gameState, chatHistory, chain]);
+  }, [gameState, chatHistory, model]);
 
   return {
     gameState,
