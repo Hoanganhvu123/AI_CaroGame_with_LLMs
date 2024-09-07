@@ -13,7 +13,7 @@ Caro-AI is an intelligent AI-powered Caro (Gomoku) game that combines advanced g
 ## Product Image
 
 <p align="center">
-  <img src="public/image.png" alt="Caro-AI Logo" width="200" height="auto">
+  <img src="public/image.png" alt="Caro-AI Logo" width="500" height="auto">
 </p>
 
 ## System Architecture
@@ -65,12 +65,6 @@ To set up Caro-AI:
    ```
    GOOGLE_API_KEY=your_google_api_key
    GROQ_API_KEY=your_groq_api_key
-   LANGCHAIN_SMITH_API_KEY=your_langchain_smith_api_key
-   AIRTABLE_API_KEY=your_airtable_api_key
-   AIRTABLE_BASE_ID=your_airtable_base_id
-   AIRTABLE_TABLE_ID=your_airtable_table_id
-   TAVILY_API_KEY=your_tavily_api_key
-   PINECONE_API_KEY=your_pinecone_api_key
    ```
 
 ## Usage 🖥️
