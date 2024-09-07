@@ -13,7 +13,7 @@ Caro-AI is an intelligent AI-powered Caro (Gomoku) game that combines advanced g
 ## Product Image
 
 <p align="center">
-  <img src="public/image.png" alt="Caro-AI Logo" width="500" height="auto">
+  <img src="public/image.png" alt="Caro-AI Logo" width="900" height="auto">
 </p>
 
 ## System Architecture
